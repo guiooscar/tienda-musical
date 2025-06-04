@@ -1,54 +1,68 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Producto - Tienda Musical</title>
-</head>
-<body>
-    <h1>✏️ Editar producto</h1>
+{% extends 'base.html' %}
 
-    <form action="{{ url_for('editar_producto', id_producto=producto['id_producto']) }}" method="POST">
-        <label for="id_categoria">Categoría:</label><br>
-        <select name="id_categoria" id="id_categoria" required>
-            {% for categoria in categorias %}
-                <option value="{{ categoria['id_categoria'] }}"
-                    {% if categoria['id_categoria'] == producto['id_subcategoria'] %}selected{% endif %}>
-                    {{ categoria['nombre_categoria'] }}
-                </option>
-            {% endfor %}
-        </select><br><br>
+{% block title %}Editar Producto{% endblock %}
 
-        <label for="id_subcategoria">Subcategoría:</label><br>
-        <select name="id_subcategoria" id="id_subcategoria" required>
-            {% for subcategoria in subcategorias %}
-                <option value="{{ subcategoria['id_subcategoria'] }}"
-                    {% if subcategoria['id_subcategoria'] == producto['id_subcategoria'] %}selected{% endif %}>
-                    {{ subcategoria['nombre_subcategoria'] }}
-                </option>
-            {% endfor %}
-        </select><br><br>
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">✏️ Editar Producto</h2>
+  <form action="{{ url_for('editar_producto', id_producto=producto['id_producto']) }}" method="POST">
+    
+    <div class="form-group">
+      <label for="id_categoria">Categoría:</label>
+      <select class="form-control" name="id_categoria" id="id_categoria" required>
+        {% for categoria in categorias %}
+          <option value="{{ categoria['id_categoria'] }}"
+            {% if categoria['id_categoria'] == producto['id_subcategoria'] %}selected{% endif %}>
+            {{ categoria['nombre_categoria'] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
 
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" name="nombre" id="nombre" value="{{ producto['nombre'] }}" required><br><br>
+    <div class="form-group">
+      <label for="id_subcategoria">Subcategoría:</label>
+      <select class="form-control" name="id_subcategoria" id="id_subcategoria" required>
+        {% for subcategoria in subcategorias %}
+          <option value="{{ subcategoria['id_subcategoria'] }}"
+            {% if subcategoria['id_subcategoria'] == producto['id_subcategoria'] %}selected{% endif %}>
+            {{ subcategoria['nombre_subcategoria'] }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
 
-        <label for="referencia">Referencia:</label><br>
-        <input type="text" name="referencia" id="referencia" value="{{ producto['referencia'] }}" required><br><br>
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" class="form-control" name="nombre" id="nombre" value="{{ producto['nombre'] }}" required>
+    </div>
 
-        <label for="descripcion">Descripción:</label><br>
-        <textarea name="descripcion" id="descripcion" rows="4">{{ producto['descripcion'] }}</textarea><br><br>
+    <div class="form-group">
+      <label for="referencia">Referencia:</label>
+      <input type="text" class="form-control" name="referencia" id="referencia" value="{{ producto['referencia'] }}" required>
+    </div>
 
-        <label for="precio">Precio:</label><br>
-        <input type="number" name="precio" id="precio" step="0.01" value="{{ producto['precio'] }}" required><br><br>
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea class="form-control" name="descripcion" id="descripcion" rows="4" required>{{ producto['descripcion'] }}</textarea>
+    </div>
 
-        <label for="cantidad">Cantidad:</label><br>
-        <input type="number" name="cantidad" id="cantidad" value="{{ producto['cantidad'] }}" required><br><br>
+    <div class="form-group">
+      <label for="precio">Precio:</label>
+      <input type="number" class="form-control" name="precio" id="precio" step="0.01" value="{{ producto['precio'] }}" required>
+    </div>
 
-        <label for="img_url">URL de la imagen:</label><br>
-        <input type="text" name="img_url" id="img_url" value="{{ producto['img_url'] }}"><br><br>
+    <div class="form-group">
+      <label for="cantidad">Cantidad:</label>
+      <input type="number" class="form-control" name="cantidad" id="cantidad" value="{{ producto['cantidad'] }}" required>
+    </div>
 
-        <button type="submit">Guardar cambios</button>
-    </form>
+    <div class="form-group">
+      <label for="img_url">URL de la imagen:</label>
+      <input type="text" class="form-control" name="img_url" id="img_url" value="{{ producto['img_url'] }}" required>
+    </div>
 
-    <p><a href="{{ url_for('ver_productos') }}">⬅️ Volver a la lista de productos</a></p>
-</body>
-</html>
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="{{ url_for('ver_productos') }}" class="btn btn-secondary ml-2">Volver</a>
+  </form>
+</div>
+{% endblock %}

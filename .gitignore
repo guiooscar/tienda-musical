@@ -1,5 +1,8 @@
-venv/
+# Evita subir configuraciones locales y secretos
+.env
 __pycache__/
 *.pyc
-*.log
-.env
+*.db
+*.sqlite3
+venv/
+conexion.py  

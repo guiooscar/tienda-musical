@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+
 from models.productos import (
     insertar_producto,
     obtener_productos_con_subcategoria,
@@ -10,26 +11,58 @@ from models.productos import (
     obtener_todas_las_subcategorias,
     obtener_subcategorias_por_categoria
 )
+from models.usuarios import obtener_usuario_por_username
+from models.autenticacion import rol_requerido
 
 # Inicialización de la aplicación Flask
 app = Flask(__name__)
+app.secret_key = 'clave_secreta_super_segura'
 
 # -------------------------------------------
-# Rutas principales
+# Login y logout
+# -------------------------------------------
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        usuario = obtener_usuario_por_username(username)
+
+        if usuario and password == usuario['password']:  
+            session['username'] = usuario['username']
+            session['rol'] = usuario['rol']
+            session['nombre_completo'] = usuario['nombre_completo']  
+            return redirect(url_for('index'))
+        else:
+            error = 'Usuario o contraseña incorrectos'
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+# -------------------------------------------
+# Página principal (restringida a logueados)
 # -------------------------------------------
 
 @app.route('/')
 def index():
-    """Página de inicio del panel de administración."""
+    if 'username' not in session:
+        return redirect(url_for('login'))
     return render_template('index.html')
 
 # -------------------------------------------
-# Productos: Agregar
+# Productos: Agregar (solo admin)
 # -------------------------------------------
 
 @app.route('/agregar', methods=['GET', 'POST'])
+@rol_requerido('admin')
 def agregar_producto():
-    """Agrega un nuevo producto a la base de datos."""
     if request.method == 'POST':
         insertar_producto(
             request.form['id_subcategoria'],
@@ -48,30 +81,34 @@ def agregar_producto():
     )
 
 # -------------------------------------------
-# Productos: Buscar
+# Productos: Buscar (ambos roles)
 # -------------------------------------------
 
 @app.route('/buscar', methods=['GET', 'POST'])
 def buscar_producto():
-    """Busca productos por nombre o referencia."""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
     productos = []
     if request.method == 'POST':
         productos = buscar_productos_por_termino(request.form['termino'])
     return render_template('buscar.html', productos=productos)
 
 # -------------------------------------------
-# Productos: Visualización y paginación
+# Productos: Visualización (ambos roles)
 # -------------------------------------------
 
 @app.route('/productos')
 def ver_productos():
-    """Visualiza todos los productos con opciones de paginación y filtrado."""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
     page   = request.args.get('page', 1, type=int)
     cat    = request.args.get('cat', None, type=int)
     subcat = request.args.get('subcat', None, type=int)
 
     productos = obtener_productos_con_subcategoria()
-    # Filtrado por categoría y subcategoría
+
     if cat:
         productos = [p for p in productos if p['id_categoria'] == cat]
     if subcat:
@@ -80,14 +117,13 @@ def ver_productos():
     per_page = 10
     start = (page - 1) * per_page
     end = start + per_page
-    productos_pag = productos[start:end]
-    # se usa el mismo nombre de la función para la URL de paginación
+
     prev_url = url_for('ver_productos', page=page-1, cat=cat, subcat=subcat) if page > 1 else None
     next_url = url_for('ver_productos', page=page+1, cat=cat, subcat=subcat) if end < len(productos) else None
 
     return render_template(
         'productos.html',
-        productos=productos_pag,
+        productos=productos[start:end],
         prev_url=prev_url,
         next_url=next_url,
         categorias=obtener_todas_las_categorias(),
@@ -97,22 +133,24 @@ def ver_productos():
     )
 
 # -------------------------------------------
-# Productos: Detalle
+# Productos: Detalle (ambos roles)
 # -------------------------------------------
 
 @app.route('/producto/<int:id_producto>')
 def detalle_producto(id_producto):
-    """Muestra el detalle de un producto específico."""
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
     producto = obtener_producto_por_id(id_producto)
     return render_template('producto.html', producto=producto)
 
 # -------------------------------------------
-# Productos: Editar
+# Productos: Editar (solo admin)
 # -------------------------------------------
 
 @app.route('/editar/<int:id_producto>', methods=['GET', 'POST'])
+@rol_requerido('admin')
 def editar_producto(id_producto):
-    """Edita un producto existente."""
     if request.method == 'POST':
         actualizar_producto(
             id_producto,
@@ -134,22 +172,21 @@ def editar_producto(id_producto):
     )
 
 # -------------------------------------------
-# Productos: Eliminar
+# Productos: Eliminar (solo admin)
 # -------------------------------------------
 
 @app.route('/eliminar/<int:id_producto>')
+@rol_requerido('admin')
 def eliminar_producto(id_producto):
-    """Elimina un producto por su ID."""
     eliminar_producto_por_id(id_producto)
     return redirect(url_for('ver_productos'))
 
 # -------------------------------------------
-# Utilidades: Obtener subcategorías dinámicas
+# Utilidades: Subcategorías dinámicas (AJAX)
 # -------------------------------------------
 
 @app.route('/subcategorias/<int:id_categoria>')
 def get_subcats(id_categoria):
-    """Devuelve subcategorías en formato JSON dado un id_categoria (AJAX)."""
     return jsonify(obtener_subcategorias_por_categoria(id_categoria))
 
 # -------------------------------------------
