@@ -1,53 +1,63 @@
-titulo: Tienda Musical
-descripcion: >
-  Este proyecto es una aplicación web creada con Flask para la gestión de inventario de una tienda de instrumentos musicales.
-  Permite registrar, consultar y administrar productos como guitarras, bajos, teclados y más.
+# Tienda Musical
 
-tecnologias_utilizadas:
-  - Python 3
-  - Flask
-  - HTML/CSS
-  - Jinja2
-  - MySQL (con PHPMyAdmin en XAMPP)
+Este proyecto es una aplicación web creada con **Flask** para la gestión de inventario de una tienda de instrumentos musicales. Permite registrar, consultar y administrar productos como guitarras, bajos, teclados y más.
 
-estructura_del_proyecto: |
-  tienda_musical/
-  ├── app/
-  ├── models/
-  ├── static/
-  ├── templates/
-  ├── venv/             ← ignorado con .gitignore
-  ├── conexion.py
-  ├── requirements.txt
-  ├── README.md
+---
 
-como_ejecutar:
-  - paso: Clona el repositorio
-    comando: |
-      git clone https://github.com/guiooscar/tienda-musical.git
+## Tecnologías utilizadas
 
-  - paso: Crea y activa un entorno virtual
-    comando: |
-      python -m venv venv
-      venv\Scripts\activate
+- Python 3
+- Flask
+- HTML/CSS
+- Jinja2
+- MySQL (con PHPMyAdmin en XAMPP)
 
-  - paso: Instala las dependencias
-    comando: |
-      pip install -r requirements.txt
+---
 
-  - paso: Ejecuta la app
-    comando: |
-      python app.py
+## Estructura del proyecto
 
-estado_del_proyecto:
-  descripcion: En desarrollo. Próximas funciones
-  tareas_pendientes:
-    - CRUD completo desde interfaz
-    - Conexión a MySQL
-    - Sistema de usuarios con login
-    - Interfaz visual atractiva y adaptable
+tienda_musical/
+├── app/
+├── models/
+├── static/
+├── templates/
+├── venv/ ← ignorado con .gitignore
+├── conexion.py
+├── requirements.txt
+├── README.md
 
-autor:
-  nombre: Oscar David Pinzón Guio
-  descripcion: Licenciado en música | Guitarrista | Estudiante de Ingeniería de Sistemas
-  ubicacion: Zipaquirá, Colombia
+
+---
+
+## Cómo ejecutar el proyecto
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/guiooscar/tienda-musical.git
+
+2. Crea y activa un entorno virtual:
+python -m venv venv
+venv\Scripts\activate
+
+3. Instala las dependencias:
+pip install -r requirements.txt
+
+4. Ejecuta la aplicación:
+python app.py
+
+Estado del proyecto
+En desarrollo. Próximas funciones:
+
+ CRUD completo desde interfaz
+
+ Conexión a MySQL
+
+ Sistema de usuarios con login
+
+ Interfaz visual atractiva y adaptable
+
+Autor
+Oscar David Pinzón Guio
+Licenciado en música | Guitarrista | Estudiante de Ingeniería de Sistemas
+Zipaquirá, Colombia
+
