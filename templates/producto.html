@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle Producto{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="h3 mb-3">Detalle del Producto</h1>
+
+  <div class="card mb-4">
+    <div class="row no-gutters">
+      <div class="col-md-4">
+        <img src="{{ producto.img_url }}" class="card-img" alt="{{ producto.nombre }}">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ producto.nombre }}</h5>
+          <p class="card-text"><strong>Referencia:</strong> {{ producto.referencia }}</p>
+          <p class="card-text"><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+          <p class="card-text"><strong>Precio:</strong> ${{ "%.2f"|format(producto.precio) }}</p>
+          <p class="card-text"><strong>Cantidad disponible:</strong> {{ producto.cantidad }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="{{ url_for('ver_productos') }}" class="btn btn-secondary">Volver a Productos</a>
+</div>
+{% endblock %}
