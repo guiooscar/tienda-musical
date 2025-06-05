@@ -1,0 +1,39 @@
+@startuml DiagramaClases
+skinparam classAttributeIconSize 0
+skinparam classFontSize 14
+
+class Usuario {
+  - id_usuario : int
+  - username : str
+  - password : str
+  - nombre_completo : str
+  - correo : str
+  - rol : str
+}
+
+class Producto {
+  - id_producto : int
+  - nombre : str
+  - referencia : str
+  - descripcion : str
+  - precio : float
+  - cantidad : int
+  - img_url : str
+  - id_subcategoria : int
+}
+
+class Categoria {
+  - id_categoria : int
+  - nombre_categoria : str
+}
+
+class Subcategoria {
+  - id_subcategoria : int
+  - nombre_subcategoria : str
+  - id_categoria : int
+}
+
+Usuario "1" --> "0..*" Producto : gestiona >
+Producto "n" --> "1" Subcategoria : pertenece a >
+Subcategoria "n" --> "1" Categoria : clasifica >
+@enduml

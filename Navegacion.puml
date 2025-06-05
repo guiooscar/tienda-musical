@@ -1,0 +1,30 @@
+@startuml NavegacionSimplificada
+left to right direction
+skinparam state {
+    BackgroundColor White
+    BorderColor Black
+    FontSize 12
+}
+
+[*] --> Login : Entrar a la app
+Login --> Index : Login exitoso
+
+Index --> Productos : Ir a Productos
+Index --> Buscar : Ir a Buscar
+
+Productos --> Detalle : Ver producto
+Buscar --> Detalle : Ver producto
+
+Index --> Agregar : Agregar producto (admin)
+Productos --> Editar : Editar producto (admin)
+Productos --> Eliminar : Eliminar producto (admin)
+
+Agregar --> Productos : Volver
+Editar --> Productos : Volver
+Eliminar --> Productos : Volver
+Detalle --> Productos : Volver
+
+Index --> [*] : Logout
+Productos --> [*] : Logout
+Buscar --> [*] : Logout
+@enduml

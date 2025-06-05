@@ -16,7 +16,7 @@ from models.autenticacion import rol_requerido
 
 # Inicialización de la aplicación Flask
 app = Flask(__name__)
-app.secret_key = 'clave_secreta_super_segura'
+app.secret_key = 'clave_segura'
 
 # -------------------------------------------
 # Login y logout

@@ -1,0 +1,30 @@
+@startuml
+top to bottom direction
+skinparam actorStyle awesome
+
+actor Administrador as Admin
+actor Vendedor as Vendedor
+
+rectangle "Sistema Tienda Musical" {
+    usecase UC1 as "Iniciar sesión"
+    usecase UC2 as "Ver productos"
+    usecase UC3 as "Buscar productos"
+    usecase UC4 as "Agregar producto"
+    usecase UC5 as "Editar producto"
+    usecase UC6 as "Eliminar producto"
+    usecase UC7 as "Cerrar sesión"
+}
+
+Admin --> UC1
+Admin --> UC2
+Admin --> UC3
+Admin --> UC4
+Admin --> UC5
+Admin --> UC6
+Admin --> UC7
+
+Vendedor --> UC1
+Vendedor --> UC2
+Vendedor --> UC3
+Vendedor --> UC7
+@enduml
