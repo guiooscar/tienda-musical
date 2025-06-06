@@ -9,8 +9,10 @@ from models.productos import (
     buscar_productos_por_termino,
     obtener_todas_las_categorias,
     obtener_todas_las_subcategorias,
-    obtener_subcategorias_por_categoria
+    obtener_subcategorias_por_categoria,
+    obtener_subcategoria_por_id
 )
+
 from models.usuarios import obtener_usuario_por_username
 from models.autenticacion import rol_requerido
 
@@ -39,7 +41,6 @@ def login():
         else:
             error = 'Usuario o contraseña incorrectos'
     return render_template('login.html', error=error)
-
 
 @app.route('/logout')
 def logout():
@@ -163,12 +164,17 @@ def editar_producto(id_producto):
             request.form['img_url']
         )
         return redirect(url_for('ver_productos'))
+    
     producto = obtener_producto_por_id(id_producto)
+    subcategoria = obtener_subcategoria_por_id(producto['id_subcategoria'])
+    id_categoria_producto = subcategoria['id_categoria'] if subcategoria else None
+
     return render_template(
         'editar.html',
         producto=producto,
         categorias=obtener_todas_las_categorias(),
-        subcategorias=obtener_todas_las_subcategorias()
+        subcategorias=obtener_todas_las_subcategorias(),
+        id_categoria_producto=id_categoria_producto
     )
 
 # -------------------------------------------

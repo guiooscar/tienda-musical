@@ -6,13 +6,14 @@
 <div class="container mt-4">
   <h2 class="mb-4">✏️ Editar Producto</h2>
   <form action="{{ url_for('editar_producto', id_producto=producto['id_producto']) }}" method="POST">
-    
+
     <div class="form-group">
       <label for="id_categoria">Categoría:</label>
       <select class="form-control" name="id_categoria" id="id_categoria" required>
+        <option value="">Seleccione una categoría</option>
         {% for categoria in categorias %}
           <option value="{{ categoria['id_categoria'] }}"
-            {% if categoria['id_categoria'] == producto['id_subcategoria'] %}selected{% endif %}>
+            {% if categoria['id_categoria'] == id_categoria_producto %}selected{% endif %}>
             {{ categoria['nombre_categoria'] }}
           </option>
         {% endfor %}
@@ -23,10 +24,12 @@
       <label for="id_subcategoria">Subcategoría:</label>
       <select class="form-control" name="id_subcategoria" id="id_subcategoria" required>
         {% for subcategoria in subcategorias %}
-          <option value="{{ subcategoria['id_subcategoria'] }}"
-            {% if subcategoria['id_subcategoria'] == producto['id_subcategoria'] %}selected{% endif %}>
-            {{ subcategoria['nombre_subcategoria'] }}
-          </option>
+          {% if subcategoria['id_categoria'] == id_categoria_producto %}
+            <option value="{{ subcategoria['id_subcategoria'] }}"
+              {% if subcategoria['id_subcategoria'] == producto['id_subcategoria'] %}selected{% endif %}>
+              {{ subcategoria['nombre_subcategoria'] }}
+            </option>
+          {% endif %}
         {% endfor %}
       </select>
     </div>
@@ -65,4 +68,27 @@
     <a href="{{ url_for('ver_productos') }}" class="btn btn-secondary ml-2">Volver</a>
   </form>
 </div>
+
+<script>
+document.getElementById('id_categoria').addEventListener('change', function () {
+  const categoriaId = this.value;
+  const subcategoriaSelect = document.getElementById('id_subcategoria');
+
+  if (categoriaId) {
+    fetch(`/subcategorias/${categoriaId}`)
+      .then(response => response.json())
+      .then(data => {
+        subcategoriaSelect.innerHTML = '<option value="">Seleccione una subcategoría</option>';
+        data.forEach(function (subcat) {
+          const option = document.createElement('option');
+          option.value = subcat.id_subcategoria;
+          option.textContent = subcat.nombre_subcategoria;
+          subcategoriaSelect.appendChild(option);
+        });
+      });
+  } else {
+    subcategoriaSelect.innerHTML = '<option value="">Seleccione una subcategoría</option>';
+  }
+});
+</script>
 {% endblock %}

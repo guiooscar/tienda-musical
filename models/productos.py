@@ -128,3 +128,17 @@ def obtener_subcategorias_por_categoria(id_categoria):
     resultado = cursor.fetchall()
     conexion.close()
     return resultado
+
+
+def obtener_subcategoria_por_id(id_subcategoria):
+    """Obtiene la información de una subcategoría específica."""
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT id_subcategoria, nombre_subcategoria, id_categoria
+        FROM subcategorias
+        WHERE id_subcategoria = %s
+    """, (id_subcategoria,))
+    resultado = cursor.fetchone()
+    conexion.close()
+    return resultado
